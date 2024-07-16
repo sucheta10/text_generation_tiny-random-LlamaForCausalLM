@@ -1,0 +1,31 @@
+from transformers import AutoTokenizer, AutoModelForCausalLM
+
+# Load tokenizer and model
+tokenizer = AutoTokenizer.from_pretrained("trl-internal-testing/tiny-random-LlamaForCausalLM") # loads the pre-trained tokenizer
+model = AutoModelForCausalLM.from_pretrained("trl-internal-testing/tiny-random-LlamaForCausalLM") #  loads the pre-trained language model
+# tokenizer- breaks the inputed text into small tokens 
+# model-learns patterns in text data during training and based on the learned patterns, models can generate predictions or outputs from given inputs
+
+
+
+# Input text
+text = "My name is Clara and I am"
+
+# Tokenize the input text
+encoded_input = tokenizer(text, return_tensors="pt") #  converts the input text into token IDs that the model can process.
+# return_tensors='pt'---->specifies that the output should be a PyTorch tensor, which is the format the model expects.
+
+# Generate text
+outputs = model.generate(encoded_input.input_ids, max_length=200)
+# input_ids--->This is a sequence of token IDs that represent each token (word or subword) in the input text. Each token ID corresponds to a specific token in the model's vocabulary.
+# encoded_input.input_ids--->a list (or tensor) of token IDs that represents the input text after tokenization
+# max_length=200--->The maximum length of the generated sequence is 200
+
+
+# Decode the generated text
+generated_text = tokenizer.decode(outputs[0], skip_special_tokens=True)# This converts the generated token IDs back into a human-readable string.
+# output[0]--->The generated token IDs from the model
+# skip_special_tokens=True--->removes any special tokens that were added by the tokenizer during processing, making the output text cleaner
+
+# Print the generated text
+print(generated_text)
